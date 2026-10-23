@@ -1,0 +1,297 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Arabic Quiz Bank</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: one framed sheet like the printed question bank page; question cards stacked, Arabic right-to-left, UI labels left-to-right. */
+:root {
+  --bg: #eef2f8;
+  --sheet: #ffffff;
+  --ink: #14213a;
+  --muted: #5b6780;
+  --line: #d9e0ec;
+  --accent: #1f6fc2;
+  --accent-soft: #e4effb;
+  --good: #1d7f48;
+  --good-soft: #def3e6;
+  --bad: #c62f2f;
+  --bad-soft: #fbe4e4;
+  --frame-1: #8f8d52;
+  --frame-2: #e5a9a9;
+  --font-ar: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-ui: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1522; --sheet: #162033; --ink: #e8edf6; --muted: #9aa6bd; --line: #2a3750;
+    --accent: #6cb0f5; --accent-soft: #1d3150; --good: #5fd08c; --good-soft: #17382a;
+    --bad: #ff8585; --bad-soft: #402124; --frame-1: #a9a76a; --frame-2: #9a5f66;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1522; --sheet: #162033; --ink: #e8edf6; --muted: #9aa6bd; --line: #2a3750;
+  --accent: #6cb0f5; --accent-soft: #1d3150; --good: #5fd08c; --good-soft: #17382a;
+  --bad: #ff8585; --bad-soft: #402124; --frame-1: #a9a76a; --frame-2: #9a5f66;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.sheet {
+  max-width: 760px; margin: 0 auto; background: var(--sheet);
+  border: 1px solid var(--frame-1); outline: 3px solid var(--frame-2); outline-offset: -7px;
+  padding: 28px 24px 24px;
+}
+.credit {
+  margin: -28px -24px 22px; padding: 10px 16px; background: var(--accent); color: var(--sheet);
+  text-align: center; font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.credit b { font-weight: 700; letter-spacing: .12em; }
+header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 18px; }
+h1 {
+  font-family: var(--font-ar); font-weight: 700; font-size: 2.2rem; line-height: 1.3; color: var(--accent);
+  margin: 0; text-align: right; direction: rtl;
+}
+.sub { color: var(--muted); font-size: .9rem; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.toolbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--sheet);
+  border-block: 1px solid var(--line); padding: 10px 0; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.progress { flex: 1 1 160px; min-width: 0; }
+.bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+.stats { font-size: .85rem; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.stats b { color: var(--ink); }
+button { font: inherit; cursor: pointer; }
+.btn {
+  border: 1px solid var(--accent); background: transparent; color: var(--accent);
+  padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: .9rem;
+}
+.btn:hover { background: var(--accent-soft); }
+.btn.solid { background: var(--accent); color: var(--sheet); }
+.btn.solid:hover { opacity: .9; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.q { border-bottom: 1px solid var(--line); padding: 16px 0; }
+.q:last-of-type { border-bottom: 0; }
+.qhead { display: flex; flex-direction: row-reverse; gap: 12px; align-items: baseline; }
+.qnum { flex: none; font-family: var(--font-ar); font-size: 1.35rem; color: var(--muted); }
+.qtext { font-family: var(--font-ar); font-size: 1.5rem; line-height: 1.8; direction: rtl; text-align: right; min-width: 0; margin: 0; }
+.shape { font-size: 1.6rem; }
+.opts { display: grid; gap: 8px; margin-top: 10px; }
+.opt {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: right; direction: rtl;
+  background: var(--sheet); color: var(--ink); border: 1.5px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; font-family: var(--font-ar); font-size: 1.4rem; line-height: 1.6;
+}
+.opt .l {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  border: 1.5px solid var(--line); font-family: var(--font-ui); font-size: .9rem; font-weight: 700; color: var(--muted); direction: ltr;
+}
+.opt .t { flex: 1; min-width: 0; }
+.opt .t.en { font-family: var(--font-ui); font-size: 1.1rem; direction: ltr; text-align: right; }
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--good); background: var(--good-soft); }
+.opt.right .l { background: var(--good); border-color: var(--good); color: var(--sheet); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .l { background: var(--bad); border-color: var(--bad); color: var(--sheet); }
+.fb { min-height: 1.4em; margin-top: 6px; font-size: .88rem; font-weight: 600; }
+.fb.ok { color: var(--good); }
+.fb.no { color: var(--bad); }
+.result {
+  margin-top: 8px; padding: 18px; border-radius: 10px; background: var(--accent-soft); text-align: center;
+}
+.result .big { font-size: 2.2rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.result p { margin: 4px 0 12px; color: var(--muted); }
+.key { margin-top: 22px; border-top: 2px solid var(--frame-2); padding-top: 16px; }
+.key h2 { font-size: 1.1rem; margin: 0 0 4px; letter-spacing: .04em; text-transform: uppercase; }
+.key .note { color: var(--muted); font-size: .88rem; margin: 0 0 12px; }
+.keygrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.kc { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; min-width: 0; }
+.kn { flex: none; width: 1.7em; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .85rem; }
+.kl { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--bad); color: var(--sheet); display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+.ka { font-family: var(--font-ar); font-size: 1.15rem; color: var(--bad); direction: rtl; margin-inline-start: auto; min-width: 0; overflow-wrap: anywhere; }
+.ka.en { font-family: var(--font-ui); font-size: .95rem; direction: ltr; }
+footer { margin-top: 20px; font-size: .8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 480px) {
+  .sheet { padding: 20px 14px; }
+  .credit { margin: -20px -14px 18px; }
+  .qtext { font-size: 1.35rem; }
+  .opt { font-size: 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<main class="sheet">
+  <div class="credit">Created by <b>KHALEEL KAYAKKOOL</b></div>
+  <header>
+    <h1>اللُّغَةُ الْعَرَبِيَّةُ</h1>
+    <div class="sub"><span>Lower Primary quiz · 19 questions</span><span>Pick a, b or c</span></div>
+  </header>
+
+  <div class="toolbar">
+    <div class="progress">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="stats"><b id="sAnswered">0</b> of 19 answered · <b id="sCorrect">0</b> correct</div>
+    </div>
+    <button class="btn" id="keyBtn" aria-expanded="false" aria-controls="key">Show answer key</button>
+    <button class="btn" id="resetBtn">Restart</button>
+  </div>
+
+  <div id="list"></div>
+  <div id="result" class="result" hidden></div>
+
+  <section class="key" id="key" hidden>
+    <h2>Answer key</h2>
+    <p class="note">The correct letter and the answer for each question.</p>
+    <div class="keygrid" id="keyGrid"></div>
+  </section>
+
+  <footer>
+    <span>LP Arabic Questions Bank, pg. 3</span>
+    <span>Arabic Teacher's Academic Complex, Kannur &amp; Kasaragod</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var Q = [
+    { q: "لُغَةُ الضَّادِ مَاذَا؟", o: ["اللُّغَةُ الْعَرَبِيَّةُ", "اللُّغَةُ الْإِنْجِلِيزِيَّةُ", "اللُّغَةُ الْمَلَيَالَمِيَّةُ"], c: 0 },
+    { q: "مَا الْمُتَرَادِفُ لِكَلِمَةِ \"أَب\"؟", o: ["أَخٌ", "وَالِدٌ", "جَدٌّ"], c: 1 },
+    { q: "يُحْتَفَلُ بِيَوْمِ عِيدِ الْأَطْفَالِ فِي ...............", o: ["١٥ أَغُسْطُس", "٢ أُكْتُوبِر", "١٤ نُوفَمْبِر"], c: 2 },
+    { q: "اكْتُبِ الشَّاذَّ: طَمَاطِم - بَامِيَا - بَاذِنْجَان - تُفَّاح", o: ["بَامِيَا", "تُفَّاح", "بَاذِنْجَان"], c: 1 },
+    { q: "مَا هِيَ الْفَاكِهَةُ الْوَطَنِيَّةُ لِكِيرَلَا؟", o: ["فَنَسٌ", "تُفَّاحٌ", "عِنَبٌ"], c: 0 },
+    { q: "فِي الْأُسْبُوعِ ........... أَيَّامٍ", o: ["خَمْسَةُ", "سِتَّةُ", "سَبْعَةُ"], c: 2 },
+    { q: "مَا هُوَ مُفْرَدُ \"آبَار\"؟", o: ["بَحْرٌ", "بِئْرٌ", "نَهْرٌ"], c: 1 },
+    { q: "مِنَ الْوَجَبَاتِ السَّرِيعَةِ:", o: ["بَرْجَر", "حَلِيب", "رُزّ"], c: 0 },
+    { q: "مَا هُوَ مُفْرَدُ كَلِمَةِ \"أَوْلَاد\"؟", o: ["وَالِدٌ", "أُمٌّ", "وَلَدٌ"], c: 2 },
+    { q: "اكْتُبْ غَيْرَ الْمُتَجَانِسِ: بَحْرٌ - بِئْرٌ - فَأْرٌ - نَهْرٌ", o: ["بَحْرٌ", "فَأْرٌ", "نَهْرٌ"], c: 1 },
+    { q: "١ = وَاحِدٌ ، ١٠ = عَشَرَةٌ ، ........... = ١٠٠ ، أَلْفٌ = ١٠٠٠", o: ["مِائَةٌ", "عِشْرُونَ", "خَمْسُونَ"], c: 0 },
+    { q: "مُفْرَدُ \"بَلَابِل\"", o: ["بِلَالٌ", "بَالُونٌ", "بُلْبُلٌ"], c: 2 },
+    { q: "مَعْنَى \"دَرْدَشَة\" فِي الْإِنْجِلِيزِيَّةِ", o: ["Reading", "Chatting", "Writing"], c: 1, en: true },
+    { q: "اخْتَرِ الْكَلِمَةَ الصَّحِيحَةَ", o: ["حَقِيبَةٌ", "حَكِيبَةٌ", "عَقِيبَةٌ"], c: 0 },
+    { q: "اخْتَرِ الشَّاذَّ: مَنْظُومٌ – قِصَّةٌ – حِوَارٌ – كِتَابٌ", o: ["قِصَّةٌ", "حِوَارٌ", "كِتَابٌ"], c: 2 },
+    { q: "اخْتَرْ غَيْرَ الْمُتَجَانِسِ: أَخْضَرُ - أَكْبَرُ - أَحْمَرُ - أَزْرَقُ", o: ["أَخْضَرُ", "أَكْبَرُ", "أَحْمَرُ"], c: 1 },
+    { q: "اكْتُبِ اسْمَ الشَّكْلِ الْهَنْدَسِيِّ: <span class=\"shape\">○</span>", o: ["مُثَلَّثٌ", "مُرَبَّعٌ", "دَائِرَةٌ"], c: 2, html: true },
+    { q: "اكْتُبْ ضِدَّ \"جَدِيد\"", o: ["قَدِيمٌ", "صَغِيرٌ", "جَمِيلٌ"], c: 0 },
+    { q: "مَاءٌ، جَمْعُهُ ...........؟", o: ["مَاءَاتٌ", "مِيَاهٌ", "مَوَاءٌ"], c: 1 }
+  ];
+  var L = ["a", "b", "c"];
+  var AR = "٠١٢٣٤٥٦٧٨٩";
+  function arNum(n) { return String(n).replace(/\d/g, function (d) { return AR[d]; }); }
+  var picked = new Array(Q.length);
+  var list = document.getElementById("list");
+
+  function build() {
+    list.innerHTML = "";
+    Q.forEach(function (item, i) {
+      var box = document.createElement("div");
+      box.className = "q";
+      var head = document.createElement("div");
+      head.className = "qhead";
+      var num = document.createElement("span");
+      num.className = "qnum";
+      num.textContent = arNum(i + 1) + ".";
+      var txt = document.createElement("p");
+      txt.className = "qtext";
+      if (item.html) txt.innerHTML = item.q; else txt.textContent = item.q;
+      head.appendChild(num); head.appendChild(txt);
+      box.appendChild(head);
+      var opts = document.createElement("div");
+      opts.className = "opts";
+      item.o.forEach(function (label, k) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "opt";
+        b.id = "q" + i + "o" + k;
+        b.innerHTML = '<span class="l">' + L[k] + '</span><span class="t' + (item.en ? " en" : "") + '"></span>';
+        b.querySelector(".t").textContent = label;
+        b.addEventListener("click", function () { choose(i, k); });
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+      var fb = document.createElement("div");
+      fb.className = "fb"; fb.id = "fb" + i; fb.setAttribute("aria-live", "polite");
+      box.appendChild(fb);
+      list.appendChild(box);
+    });
+  }
+
+  function choose(i, k) {
+    if (picked[i] !== undefined) return;
+    picked[i] = k;
+    var c = Q[i].c;
+    for (var j = 0; j < 3; j++) {
+      var b = document.getElementById("q" + i + "o" + j);
+      b.disabled = true;
+      if (j === c) b.classList.add("right");
+      else if (j === k) b.classList.add("wrong");
+    }
+    var fb = document.getElementById("fb" + i);
+    if (k === c) { fb.className = "fb ok"; fb.textContent = "Correct"; }
+    else { fb.className = "fb no"; fb.textContent = "Not quite. The answer is " + L[c] + "."; }
+    update();
+  }
+
+  function update() {
+    var done = 0, right = 0;
+    Q.forEach(function (it, i) {
+      if (picked[i] !== undefined) { done++; if (picked[i] === it.c) right++; }
+    });
+    document.getElementById("sAnswered").textContent = done;
+    document.getElementById("sCorrect").textContent = right;
+    document.getElementById("barFill").style.width = (done / Q.length * 100) + "%";
+    var r = document.getElementById("result");
+    if (done === Q.length) {
+      var msg = right === Q.length ? "Perfect score. Mashallah!" : right >= 15 ? "Very good work." : right >= 10 ? "Good effort. Review the missed ones and try again." : "Keep practising. Use the answer key to study, then restart.";
+      r.innerHTML = '<div class="big">' + right + ' / ' + Q.length + '</div><p>' + msg + '</p>';
+      var again = document.createElement("button");
+      again.className = "btn solid"; again.textContent = "Try again";
+      again.addEventListener("click", reset);
+      r.appendChild(again);
+      r.hidden = false;
+      r.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else { r.hidden = true; }
+  }
+
+  function reset() {
+    picked = new Array(Q.length);
+    build(); update();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function buildKey() {
+    var g = document.getElementById("keyGrid");
+    Q.forEach(function (it, i) {
+      var d = document.createElement("div");
+      d.className = "kc";
+      d.innerHTML = '<span class="kn">' + (i + 1) + '</span><span class="kl">' + L[it.c] + '</span><span class="ka' + (it.en ? " en" : "") + '"></span>';
+      d.querySelector(".ka").textContent = it.o[it.c];
+      g.appendChild(d);
+    });
+  }
+
+  var keyBtn = document.getElementById("keyBtn");
+  var key = document.getElementById("key");
+  keyBtn.addEventListener("click", function () {
+    key.hidden = !key.hidden;
+    keyBtn.setAttribute("aria-expanded", String(!key.hidden));
+    keyBtn.textContent = key.hidden ? "Show answer key" : "Hide answer key";
+    if (!key.hidden) key.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.getElementById("resetBtn").addEventListener("click", reset);
+
+  build(); buildKey(); update();
+})();
+</script>
+
+</body></html>
