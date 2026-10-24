@@ -1,0 +1,199 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>LP Arabic Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: one question per screen inside a double-ruled frame, echoing the printed question bank page. */
+:root {
+  --paper: #fffdf9;
+  --ground: #f3efe6;
+  --ink: #22201c;
+  --muted: #6d675c;
+  --olive: #8d8a4f;
+  --rose: #e3a9ae;
+  --answer: #d8261f;
+  --good: #1f7a45;
+  --good-bg: #e3f3e8;
+  --bad: #b3261e;
+  --bad-bg: #fbe5e3;
+  --line: #ddd6c6;
+  --font-ar: "Amiri", "Noto Naskh Arabic", "Traditional Arabic", serif;
+  --font-ui: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1f1d19; --ground: #151412; --ink: #f1ece1; --muted: #a39c8d;
+    --olive: #a9a665; --rose: #b4777d; --answer: #ff6b63; --good: #5fd08b;
+    --good-bg: #17301f; --bad: #ff8f87; --bad-bg: #3a1c1a; --line: #3a362e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1f1d19; --ground: #151412; --ink: #f1ece1; --muted: #a39c8d;
+  --olive: #a9a665; --rose: #b4777d; --answer: #ff6b63; --good: #5fd08b;
+  --good-bg: #17301f; --bad: #ff8f87; --bad-bg: #3a1c1a; --line: #3a362e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ground); color: var(--ink);
+  font-family: var(--font-ui); font-size: 16px; line-height: 1.5;
+  padding-block: 20px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+.frame { border: 2px solid var(--olive); padding: 5px; background: var(--paper); }
+.frame-in { border: 2px solid var(--rose); padding: clamp(18px, 4vw, 36px); min-height: 460px; display: flex; flex-direction: column; gap: 22px; }
+.ar { font-family: var(--font-ar); direction: rtl; unicode-bidi: plaintext; }
+bdi { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; letter-spacing: .02em; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; font-size: .85rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.bar { height: 6px; background: var(--line); }
+.bar > i { display: block; height: 100%; width: 0; background: var(--olive); transition: width .3s; }
+.qnum { font-family: var(--font-ar); font-size: 1.5rem; color: var(--muted); direction: rtl; }
+.q { font-family: var(--font-ar); direction: rtl; text-align: right; font-size: clamp(1.7rem, 5.5vw, 2.3rem); line-height: 1.9; }
+.opts { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 520px) { .opts { grid-template-columns: 1fr; } }
+.opt {
+  font-family: var(--font-ar); direction: rtl; text-align: right; font-size: 1.5rem; line-height: 1.7;
+  background: transparent; color: var(--ink); border: 1.5px solid var(--line); padding: 8px 16px; cursor: pointer;
+  min-width: 0; overflow-wrap: anywhere;
+}
+.opt:hover:not(:disabled) { border-color: var(--olive); }
+.opt:focus-visible, .btn:focus-visible { outline: 3px solid var(--olive); outline-offset: 2px; }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .t { color: var(--answer); font-weight: 700; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; }
+.msg { font-weight: 600; }
+.msg.ok { color: var(--good); } .msg.no { color: var(--bad); }
+.btn { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; background: var(--olive); color: #fff; border: 0; padding: 11px 24px; cursor: pointer; }
+:root[data-theme="dark"] .btn { color: #1a1814; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #1a1814; } }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--olive); }
+.center { text-align: center; align-items: center; justify-content: center; }
+.title-ar { font-family: var(--font-ar); font-size: clamp(2.2rem, 8vw, 3.4rem); line-height: 1.5; direction: rtl; }
+.sub { color: var(--muted); max-width: 40ch; }
+.score { font-family: var(--font-ar); font-size: 4rem; line-height: 1.2; color: var(--answer); direction: ltr; }
+.review { text-align: right; width: 100%; display: grid; gap: 8px; }
+.review h3 { font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0; text-align: left; }
+.ritem { border-top: 1px solid var(--line); padding-top: 8px; font-family: var(--font-ar); direction: rtl; font-size: 1.3rem; line-height: 1.8; }
+.ritem .r { color: var(--answer); }
+.credit { margin-top: 14px; display: flex; justify-content: center; text-align: center; font-weight: 600; letter-spacing: .06em; gap: 12px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); }
+.credit .ar { font-size: 1rem; }
+[hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <div class="frame"><div class="frame-in" id="screen"></div></div>
+  <div class="credit"><span>Created by KHALEEL KAYAKKOOL</span></div>
+</div>
+
+<script>
+// First option of each item is the correct one; options are shuffled at runtime.
+var E = function (s) { return '<bdi dir="ltr">' + s + '</bdi>'; };
+var DATA = [
+  [41, 'عَرِّبْ : ' + E('Drone'), ['طَائِرَةٌ مُسَيَّرَةٌ','سَيَّارَةٌ كَهْرَبَائِيَّةٌ','مِنْطَادٌ','صَارُوخٌ']],
+  [42, 'عَرِّبْ : ' + E('NURSE'), ['مُمَرِّضَةٌ','مُعَلِّمَةٌ','طَبِيبَةٌ','صَيْدَلِيَّةٌ']],
+  [43, 'عَرِّبْ : ' + E('WHEEL CHAIR'), ['كُرْسِيٌّ مُتَحَرِّكٌ','سَرِيرٌ طِبِّيٌّ','طَاوِلَةٌ مُدَوَّرَةٌ','مِظَلَّةٌ']],
+  [44, 'مَا الْحَيَوَانُ الْمُلَقَّبُ بِـ "سَفِينَةِ الصَّحْرَاءِ"؟', ['الْجَمَلُ','الْحِصَانُ','الْفِيلُ','الْحِمَارُ']],
+  [45, 'مَسْكَنُ الدَّجَاجَةِ :', ['خُمٌّ','زَرِيبَةٌ','عُشٌّ','إِصْطَبْلٌ']],
+  [46, 'عَرِّبْ : ' + E('PHARMACY'), ['صَيْدَلِيَّةٌ','مَكْتَبَةٌ','مَخْبَزٌ','مُسْتَشْفًى']],
+  [47, 'أَوَّلُ مَنْ نَالَ جَائِزَةَ نُوبِلْ فِي الْأَدَبِ الْعَرَبِيِّ؟', ['نَجِيب مَحْفُوظ','طَه حُسَيْن','جُبْرَان خَلِيل جُبْرَان','تَوْفِيق الْحَكِيم']],
+  [48, 'مَا الْيَوْمُ الَّذِي بَيْنَ يَوْمِ الْخَمِيسِ وَيَوْمِ السَّبْتِ؟', ['يَوْمُ الْجُمُعَةِ','يَوْمُ الْأَحَدِ','يَوْمُ الثُّلَاثَاءِ','يَوْمُ الْأَرْبِعَاءِ']],
+  [49, '"صَبَاحُ الْخَيْرِ" فِي الْإِنْجِلِيزِيَّةِ :', [E('Good Morning'), E('Good Night'), E('Good Evening'), E('Good Afternoon')]],
+  [50, 'عَرِّبْ : ' + E('INJECTION'), ['حُقْنَةٌ','دَوَاءٌ','ضِمَادٌ','مِيزَانُ حَرَارَةٍ']],
+  [51, 'عَرِّبْ : ' + E('Robot'), ['إِنْسَالَةٌ','حَاسُوبٌ','طَائِرَةٌ','هَاتِفٌ']],
+  [52, 'مِنْ أَيْنَ نَحْصُلُ عَلَى خِدْمَةِ الطَّبِيبِ؟', ['مُسْتَشْفًى','مَدْرَسَةٌ','مَطْعَمٌ','مَكْتَبَةٌ']],
+  [53, 'مَا جَمْعُ كَلِمَةِ "غُرَاب"؟', ['غِرْبَانٌ','غُرَفٌ','غُرَابَانِ','غُرَابَةٌ']],
+  [54, 'يَوْمٌ بَيْنَ يَوْمِ الْأَرْبِعَاءِ وَيَوْمِ الْجُمُعَةِ :', ['يَوْمُ الْخَمِيسِ','يَوْمُ السَّبْتِ','يَوْمُ الثُّلَاثَاءِ','يَوْمُ الْأَحَدِ']],
+  [55, 'الطَّبِيبُ يَعْمَلُ فِي ............ :', ['الْمُسْتَشْفَى','الْمَدْرَسَةِ','الْمَخْبَزِ','الْمَلْعَبِ']],
+  [56, 'مَيِّزِ الْفِعْلَ الْمُضَارِعَ (كَتَبَ ، جَلَسَ ، يَقْرَأُ ، شَرِبَ) :', ['يَقْرَأُ','كَتَبَ','جَلَسَ','شَرِبَ']],
+  [57, 'مُؤَنَّثُ "عَمّ" :', ['عَمَّةٌ','خَالَةٌ','أُخْتٌ','جَدَّةٌ']],
+  [58, 'مَيِّزِ الْفِعْلَ الْمَاضِيَ (كَتَبَ ، يَكْتُبُ ، أُكْتُبْ ، لَا تَكْتُبْ) :', ['كَتَبَ','يَكْتُبُ','أُكْتُبْ','لَا تَكْتُبْ']],
+  [59, 'مَيِّزِ الشَّاذَّ (سَاعَةٌ - دَقِيقَةٌ - ثَانِيَةٌ - بَاحَةٌ) :', ['بَاحَةٌ','سَاعَةٌ','دَقِيقَةٌ','ثَانِيَةٌ']],
+  [60, 'عَرِّبْ : ' + E('SCHOOL OFFICE'), ['مَكْتَبُ الْمَدْرَسَةِ','مَكْتَبَةُ الْمَدْرَسَةِ','مَلْعَبُ الْمَدْرَسَةِ','مُدِيرُ الْمَدْرَسَةِ']]
+];
+
+var screen = document.getElementById('screen');
+var order, idx, score, missed;
+
+function shuffle(a) {
+  a = a.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function start() {
+  order = shuffle(DATA.map(function (_, i) { return i; }));
+  idx = 0; score = 0; missed = [];
+  renderQ();
+}
+function renderStart() {
+  screen.className = 'frame-in center';
+  screen.innerHTML =
+    '<div class="title-ar">بَنْكُ أَسْئِلَةِ اللُّغَةِ الْعَرَبِيَّةِ</div>' +
+    '<div class="sub">LP Arabic Questions Bank. ' + DATA.length + ' questions (41 to 60). Choose the correct answer for each one.</div>' +
+    '<button class="btn" id="go">Start quiz</button>';
+  document.getElementById('go').onclick = start;
+}
+function renderQ() {
+  var item = DATA[order[idx]];
+  var opts = shuffle(item[2].map(function (t, i) { return { t: t, ok: i === 0 }; }));
+  screen.className = 'frame-in';
+  screen.innerHTML =
+    '<div class="head"><span>Question ' + (idx + 1) + ' of ' + DATA.length + '</span><span>Score ' + score + '</span></div>' +
+    '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + DATA.length + '" aria-valuenow="' + idx + '"><i style="width:' + (idx / DATA.length * 100) + '%"></i></div>' +
+    '<div><div class="qnum">' + item[0] + '</div><div class="q">' + item[1] + '</div></div>' +
+    '<div class="opts" id="opts"></div>' +
+    '<div class="foot"><span class="msg" id="msg" aria-live="polite"></span><button class="btn" id="next" hidden></button></div>';
+  var box = document.getElementById('opts');
+  opts.forEach(function (o) {
+    var b = document.createElement('button');
+    b.className = 'opt'; b.type = 'button';
+    b.innerHTML = '<span class="t">' + o.t + '</span>';
+    b.onclick = function () { answer(b, o, opts, item); };
+    b._o = o; box.appendChild(b);
+  });
+}
+function answer(btn, o, opts, item) {
+  var all = document.querySelectorAll('.opt');
+  all.forEach(function (b) {
+    b.disabled = true;
+    if (b._o.ok) b.classList.add('right');
+  });
+  var msg = document.getElementById('msg');
+  if (o.ok) { score++; msg.className = 'msg ok'; msg.textContent = 'Correct'; }
+  else {
+    btn.classList.add('wrong');
+    missed.push({ n: item[0], q: item[1], a: item[2][0] });
+    msg.className = 'msg no'; msg.textContent = 'Not quite. The answer is marked in red.';
+  }
+  var next = document.getElementById('next');
+  next.hidden = false;
+  next.textContent = idx === DATA.length - 1 ? 'See result' : 'Next';
+  next.onclick = function () { idx++; if (idx < DATA.length) renderQ(); else renderResult(); };
+  next.focus();
+}
+function renderResult() {
+  var pct = Math.round(score / DATA.length * 100);
+  var note = pct === 100 ? 'Perfect score.' : pct >= 70 ? 'Well done.' : 'Keep practising.';
+  var rev = missed.length ? '<div class="review"><h3>To review</h3>' + missed.map(function (m) {
+    return '<div class="ritem">' + m.n + ' . ' + m.q + ' <span class="r">' + m.a + '</span></div>';
+  }).join('') + '</div>' : '';
+  screen.className = 'frame-in center';
+  screen.innerHTML =
+    '<div class="head" style="justify-content:center">Result</div>' +
+    '<div class="score">' + score + ' / ' + DATA.length + '</div>' +
+    '<div class="sub">' + pct + '%. ' + note + '</div>' + rev +
+    '<button class="btn" id="again">Try again</button>';
+  document.getElementById('again').onclick = start;
+}
+renderStart();
+</script>
+
+</body></html>
